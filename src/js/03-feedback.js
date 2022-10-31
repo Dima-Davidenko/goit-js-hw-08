@@ -5,10 +5,7 @@ const formObject = {
   EMAIL_INPUT_NAME: 'email',
   MESSAGE_INPUT_NAME: 'message',
   formNode: document.querySelector('.feedback-form'),
-  formState: {
-    email: '',
-    message: '',
-  },
+  formState: {},
 
   run: function () {
     formObject.checkStorage();
@@ -27,9 +24,15 @@ const formObject = {
   },
 
   updateFormFromStorageKey: function () {
-    const { email, message } = formObject.formNode.elements;
-    email.value = formObject.formState.email;
-    message.value = formObject.formState.message;
+    const {
+      EMAIL_INPUT_NAME: emailName,
+      MESSAGE_INPUT_NAME: messageName,
+      formNode,
+      formState,
+    } = formObject;
+    const { [emailName]: email, [messageName]: message } = formNode.elements;
+    email.value = formState[emailName];
+    message.value = formState[messageName];
   },
 
   addInputEventListener: function () {
@@ -64,9 +67,15 @@ const formObject = {
   },
 
   readCurrentFormValues: function () {
-    const { email, message } = formObject.formNode.elements;
-    formObject.formState.email = email.value;
-    formObject.formState.message = message.value;
+    const {
+      EMAIL_INPUT_NAME: emailName,
+      MESSAGE_INPUT_NAME: messageName,
+      formState,
+    } = formObject;
+    const { [emailName]: email, [messageName]: message } =
+      formObject.formNode.elements;
+    formState[emailName] = email.value;
+    formState[messageName] = message.value;
   },
 
   outputFormValues() {
