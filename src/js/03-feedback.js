@@ -8,18 +8,16 @@ const formObject = {
   formState: {},
 
   run: function () {
-    formObject.checkStorage();
-    formObject.addInputEventListener();
-    formObject.addSubmitEventListener();
+    this.checkStorage();
+    this.addInputEventListener();
+    this.addSubmitEventListener();
   },
 
   checkStorage: function () {
-    const storageKeyValue = JSON.parse(
-      localStorage.getItem(formObject.KEY_NAME)
-    );
+    const storageKeyValue = JSON.parse(localStorage.getItem(this.KEY_NAME));
     if (storageKeyValue) {
-      formObject.formState = storageKeyValue;
-      formObject.updateFormFromStorageKey();
+      this.formState = storageKeyValue;
+      this.updateFormFromStorageKey();
     }
   },
 
@@ -29,41 +27,38 @@ const formObject = {
       MESSAGE_INPUT_NAME: messageName,
       formNode,
       formState,
-    } = formObject;
+    } = this;
     const { [emailName]: email, [messageName]: message } = formNode.elements;
     email.value = formState[emailName];
     message.value = formState[messageName];
   },
 
   addInputEventListener: function () {
-    formObject.formNode.addEventListener(
+    this.formNode.addEventListener(
       'input',
-      throttle(formObject.updateLocalStorage, 500)
+      throttle(this.updateLocalStorage.bind(this), 500)
     );
   },
 
   updateLocalStorage: function (event) {
     const { name: inputName, value: inputValue } = event.target;
-    formObject.formState[inputName] = inputValue;
-    localStorage.setItem(
-      formObject.KEY_NAME,
-      JSON.stringify(formObject.formState)
-    );
+    this.formState[inputName] = inputValue;
+    localStorage.setItem(this.KEY_NAME, JSON.stringify(this.formState));
   },
 
   addSubmitEventListener: function () {
-    formObject.formNode.addEventListener(
+    this.formNode.addEventListener(
       'submit',
-      formObject.clearLocalStorageAndFormOnSubmit
+      this.clearLocalStorageAndFormOnSubmit.bind(this)
     );
   },
 
   clearLocalStorageAndFormOnSubmit: function (event) {
     event.preventDefault();
-    formObject.readCurrentFormValues();
-    formObject.formNode.reset();
-    localStorage.removeItem(formObject.KEY_NAME);
-    formObject.outputFormValues();
+    this.readCurrentFormValues();
+    this.formNode.reset();
+    localStorage.removeItem(this.KEY_NAME);
+    this.outputFormValues();
   },
 
   readCurrentFormValues: function () {
@@ -71,15 +66,15 @@ const formObject = {
       EMAIL_INPUT_NAME: emailName,
       MESSAGE_INPUT_NAME: messageName,
       formState,
-    } = formObject;
+    } = this;
     const { [emailName]: email, [messageName]: message } =
-      formObject.formNode.elements;
+      this.formNode.elements;
     formState[emailName] = email.value;
     formState[messageName] = message.value;
   },
 
   outputFormValues() {
-    console.log(formObject.formState);
+    console.log(this.formState);
   },
 };
 
